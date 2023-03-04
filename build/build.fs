@@ -205,7 +205,6 @@ let initTargets () =
     "Clean" ?=>! "DotnetRestore"
 
     "DotnetRestore"
-        ==> "CheckFormatCode"
         ==> "DotnetBuild"
         ==>! "DotnetTest"
 

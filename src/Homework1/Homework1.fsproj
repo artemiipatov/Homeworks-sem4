@@ -4,11 +4,10 @@
         <TargetFramework>net7.0</TargetFramework>
         <OutputType>Exe</OutputType>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-        <RootNamespace>Homeworks-sem4</RootNamespace>
+        <RootNamespace>Homework1</RootNamespace>
     </PropertyGroup>
     <PropertyGroup>
-        <Title>Homeworks-sem4</Title>
-        <Description>Homeworks-sem4 does the thing!</Description>
+        <Title>Homework1</Title>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
         <Optimize>true</Optimize>

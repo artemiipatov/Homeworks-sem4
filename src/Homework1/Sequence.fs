@@ -20,6 +20,9 @@ module Sequence =
             | _ ->
                 Some(
                     (number),
-                    (power + 1.0, number * 2.0)
+                    (power
+                     + 1.0,
+                     number
+                     * 2.0)
                 )
         )

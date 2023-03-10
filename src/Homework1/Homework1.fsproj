@@ -15,6 +15,7 @@
     </PropertyGroup>
     <ItemGroup>
         <Content Include="paket.references" />
+        <Compile Include="ListReverse.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />

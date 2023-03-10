@@ -13,14 +13,13 @@ module Sequence =
         if n > m then
             failwith "n should be less or equal to m"
 
-        (2.0 ** n)
-        |> Seq.unfold (fun state ->
-            match state with
-            | state when state > m -> None
+        (n, 2.0 ** n)
+        |> Seq.unfold (fun (power, number) ->
+            match (power, number) with
+            | power, _ when power > m -> None
             | _ ->
                 Some(
-                    state,
-                    state
-                    * 2.0
+                    (number),
+                    (power + 1.0, number * 2.0)
                 )
         )

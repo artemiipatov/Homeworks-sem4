@@ -12,7 +12,7 @@ module ListReverse =
         let rec reverseRec acc tail =
             match tail with
             | [] -> acc
-            | hd::tl -> reverseRec (hd::acc) tl
+            | hd :: tl -> reverseRec (hd :: acc) tl
 
         match list with
         | [] -> []

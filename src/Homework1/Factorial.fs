@@ -11,9 +11,10 @@ module Factorial =
     let factorial number =
         let rec factorialRec acc n =
             match n with
-            | 0 | 1 -> acc
+            | 0
+            | 1 -> acc
             | _ -> factorialRec (acc * n) (n - 1)
 
         match number with
         | _ when number < 0 -> None
-        | _ -> Some (factorialRec 1 number)
+        | _ -> Some(factorialRec 1 number)

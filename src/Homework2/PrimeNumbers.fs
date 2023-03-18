@@ -10,7 +10,10 @@ module PrimeNumbers =
     /// <param name="n">Input number.</param>
     let isPrime n =
 
-        let sqrt = float >> sqrt >> int
+        let sqrt =
+            float
+            >> sqrt
+            >> int
 
         [ 2 .. sqrt n ]
         |> List.forall (fun v -> n % v <> 0)

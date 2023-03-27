@@ -13,11 +13,7 @@ module ElementSearch =
         let rec findRec counter list =
             match list with
             | head :: _ when head = element -> Some counter
-            | _ :: tail ->
-                findRec
-                    (counter
-                     + 1)
-                    tail
+            | _ :: tail -> findRec (counter + 1) tail
             | [] -> None
 
         findRec 0 list

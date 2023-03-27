@@ -6,5 +6,4 @@ let allTests = testList "all Tests" [ TreeMap.treeMapTests ]
 
 [<EntryPoint>]
 let main argv =
-    allTests
-    |> runTestsWithCLIArgs [] argv
+    allTests |> runTestsWithCLIArgs [] argv

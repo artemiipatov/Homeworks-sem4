@@ -19,7 +19,5 @@ module Tree =
     let rec map op tree =
 
         match tree with
-        | Node(value, left, right) ->
-            (op value, map op left, map op right)
-            |> Node
+        | Node(value, left, right) -> (op value, map op left, map op right) |> Node
         | Empty -> Empty

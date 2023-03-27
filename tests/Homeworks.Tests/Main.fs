@@ -6,5 +6,4 @@ let allTests = testList "all Tests" [ EvenNumbers.evenNumbersTests ]
 
 [<EntryPoint>]
 let main argv =
-    allTests
-    |> runTestsWithCLIArgs [] argv
+    allTests |> runTestsWithCLIArgs [] argv

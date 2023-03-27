@@ -9,19 +9,14 @@ module EvenNumbers =
     /// </summary>
     /// <param name="list">Input list.</param>
     let CountUsingMap list =
-        list
-        |> List.map (fun v -> abs v % 2)
-        |> List.sum
-        |> (-) (List.length list)
+        list |> List.map (fun v -> abs v % 2) |> List.sum |> (-) (List.length list)
 
     /// <summary>
     /// Counts number of even numbers in the list using filter function.
     /// </summary>
     /// <param name="list">Input list.</param>
     let CountUsingFilter list =
-        list
-        |> List.filter (fun v -> (v % 2) = 0)
-        |> List.length
+        list |> List.filter (fun v -> (v % 2) = 0) |> List.length
 
     /// <summary>
     /// Counts number of even numbers in the list using fold function.

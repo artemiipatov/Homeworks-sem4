@@ -1,6 +1,6 @@
 ﻿namespace Homework2
 
-module LambdaInterpreter =
+module Interpreter =
     type VarName = string
 
     type Term =
@@ -10,25 +10,25 @@ module LambdaInterpreter =
 
     let rec replace mainTerm oldTerm newTerm =
         match mainTerm with
-        | App(term1, term2) ->
-            App(replace term1 oldTerm newTerm, replace term2 oldTerm newTerm)
+        | App(term1, term2) -> App(replace term1 oldTerm newTerm, replace term2 oldTerm newTerm)
         | Abs(var, term) ->
             match newTerm with
             | Var v when v = var ->
-                match (rename (Abs(var, term)) var) with
+                match (renameBoundVar term var) with
                 | Abs(newVar, t) -> Abs(newVar, replace t oldTerm newTerm)
-                | _ -> failwith "Rename output type should be the same as input one."
+                | _ -> failwith "Rename output type should be the same as the input one."
             | _ -> Abs(var, replace term oldTerm newTerm)
         | Var var -> if var = oldTerm then newTerm else var |> Var
 
-    and rename term (oldVar: VarName) =
-        let newVar = ((oldVar |> string) + "'") |> VarName |> Var
-
-        replace term oldVar newVar
+    and renameBoundVar absBody (oldName: VarName) =
+        let newName = ((oldName |> string) + "'") |> VarName
+        let newVar = newName |> Var
+        let newTerm = replace absBody oldName newVar
+        Abs(newName, newTerm)
 
     let rec apply mainTerm applicableTerm =
         match mainTerm with
-        | App(term1, term2) -> App(apply term1 applicableTerm, apply term2 applicableTerm)
+        | App(term1, term2) -> App(apply term1 applicableTerm, term2)
         | Abs(var, term) -> replace term var applicableTerm
         | Var var -> var |> Var
 
@@ -38,8 +38,9 @@ module LambdaInterpreter =
             | App(mainTerm, applicableTerm) ->
                 match mainTerm with
                 | Var _ -> App(mainTerm, reduceRec applicableTerm)
+                | App _ -> reduceRec (apply (reduceRec mainTerm) applicableTerm)
                 | _ -> reduceRec (apply mainTerm applicableTerm)
-            | Abs(var, term) -> Abs(var, term)
+            | Abs(var, term) -> Abs(var, reduceRec term)
             | Var var -> Var var
 
         reduceRec expression

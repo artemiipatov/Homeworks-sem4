@@ -10,7 +10,7 @@ let arrayToTree array =
 
     let rec makeTreeRec acc =
         match array with
-        | _ when acc > lastIndex -> Empty
+        | _ when acc >= length -> Empty
         | _ -> Node(array[acc], makeTreeRec (acc * 2 + 1), makeTreeRec (acc * 2 + 2))
 
     makeTreeRec 0

@@ -28,7 +28,7 @@ module Interpreter =
 
     let rec apply mainTerm applicableTerm =
         match mainTerm with
-        | App(term1, term2) -> App(apply term1 applicableTerm, term2)
+        | App _ -> App(mainTerm, applicableTerm)
         | Abs(var, term) -> replace term var applicableTerm
         | Var var -> var |> Var
 
@@ -38,7 +38,7 @@ module Interpreter =
             | App(mainTerm, applicableTerm) ->
                 match mainTerm with
                 | Var _ -> App(mainTerm, reduceRec applicableTerm)
-                | App _ -> reduceRec (apply (reduceRec mainTerm) applicableTerm)
+                | App _ -> apply (reduceRec mainTerm) applicableTerm
                 | _ -> reduceRec (apply mainTerm applicableTerm)
             | Abs(var, term) -> Abs(var, reduceRec term)
             | Var var -> Var var

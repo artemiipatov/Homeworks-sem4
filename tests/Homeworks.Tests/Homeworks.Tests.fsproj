@@ -8,6 +8,7 @@
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="Main.fs" />
+        <Compile Include="PointFree.fs" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\src\Homework1\Homework1.fsproj" />

@@ -15,22 +15,26 @@ let arrayToTree array =
 
     makeTreeRec 0
 
-let treeToArray tree =
-    let rec treeToArrayRec curTree =
+let treeToArray length tree =
+    let result = Array.zeroCreate length
+
+    let rec treeToArrayRec curTree index =
         match curTree with
-        | Empty -> []
-        | Node(value, Empty, Empty) -> value :: []
-        | Node(value, left, Empty) -> value :: treeToArrayRec left
+        | Empty -> ()
         | Node(value, left, right) ->
-            value :: (treeToArrayRec left) @ (treeToArrayRec right)
+            result[index] <- value
+            treeToArrayRec left (index * 2 + 1)
+            treeToArrayRec right (index * 2 + 2)
 
-    tree |> treeToArrayRec |> List.toArray
+    treeToArrayRec tree 0
+    result
 
-let makeTest array =
-    let op x = x * 2
+let makeTest (array, c) =
+    let length = array |> Array.length
+    let op x = x * c
     let tree = arrayToTree array
 
-    let actualArray = tree |> Tree.map op |> treeToArray
+    let actualArray = tree |> Tree.map op |> treeToArray length
 
     let expectedArray = array |> Array.map op
 

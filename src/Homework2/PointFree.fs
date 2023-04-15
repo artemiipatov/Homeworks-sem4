@@ -6,7 +6,8 @@ module PointFree =
     /// </summary>
     /// <param name="x">Coefficient.</param>
     /// <param name="list">Input list.</param>
-    let funcCommon x list = List.map (fun y -> y * x) list
+    let funcCommon x list =
+        List.map (fun y -> y * x) list
 
     (*
     Steps to convert to point free:

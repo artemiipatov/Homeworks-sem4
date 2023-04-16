@@ -7,10 +7,13 @@
         <RootNamespace>Homeworks.Tests</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
+        <Content Include="paket.references" />
+        <Compile Include="Interpreter.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\src\Homework1\Homework1.fsproj" />
+        <ProjectReference Include="..\..\src\Homework2\Homework2.fsproj" />
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

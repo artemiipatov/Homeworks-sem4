@@ -17,6 +17,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Homework2", "src\Homework2\
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Homework4", "src\Homework4\Homework4.fsproj", "{23DE6943-8C35-4B4F-B851-5F1581129828}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Homework6", "src\Homework6\Homework6.fsproj", "{8E3AAD16-0877-432C-B853-D76BC327CBBA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -90,6 +92,18 @@ Global
 		{23DE6943-8C35-4B4F-B851-5F1581129828}.Release|x64.Build.0 = Release|Any CPU
 		{23DE6943-8C35-4B4F-B851-5F1581129828}.Release|x86.ActiveCfg = Release|Any CPU
 		{23DE6943-8C35-4B4F-B851-5F1581129828}.Release|x86.Build.0 = Release|Any CPU
+		{8E3AAD16-0877-432C-B853-D76BC327CBBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E3AAD16-0877-432C-B853-D76BC327CBBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E3AAD16-0877-432C-B853-D76BC327CBBA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8E3AAD16-0877-432C-B853-D76BC327CBBA}.Debug|x64.Build.0 = Debug|Any CPU
+		{8E3AAD16-0877-432C-B853-D76BC327CBBA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8E3AAD16-0877-432C-B853-D76BC327CBBA}.Debug|x86.Build.0 = Debug|Any CPU
+		{8E3AAD16-0877-432C-B853-D76BC327CBBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E3AAD16-0877-432C-B853-D76BC327CBBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E3AAD16-0877-432C-B853-D76BC327CBBA}.Release|x64.ActiveCfg = Release|Any CPU
+		{8E3AAD16-0877-432C-B853-D76BC327CBBA}.Release|x64.Build.0 = Release|Any CPU
+		{8E3AAD16-0877-432C-B853-D76BC327CBBA}.Release|x86.ActiveCfg = Release|Any CPU
+		{8E3AAD16-0877-432C-B853-D76BC327CBBA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5D30E174-2538-47AC-8443-318C8C5DC2C9} = {C397A34C-84F1-49E7-AEBC-2F9F2B196216}

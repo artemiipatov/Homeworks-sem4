@@ -7,10 +7,13 @@
         <RootNamespace>Homeworks.Tests</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
+        <Compile Include="Rhombus.fs" />
+        <Compile Include="Supermap.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\src\Homework1\Homework1.fsproj" />
+        <ProjectReference Include="..\..\src\Test1\Test1.fsproj" />
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

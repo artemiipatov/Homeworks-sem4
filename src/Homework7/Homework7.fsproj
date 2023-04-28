@@ -7,7 +7,6 @@
 
     <ItemGroup>
         <Compile Include="Lazy.fs" />
-        <Compile Include="MiniCrawler.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 

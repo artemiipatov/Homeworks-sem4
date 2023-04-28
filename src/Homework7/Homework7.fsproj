@@ -6,7 +6,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="Program.fs"/>
+        <Compile Include="Lazy.fs" />
+        <Compile Include="MiniCrawler.fs" />
+        <Compile Include="Program.fs" />
     </ItemGroup>
 
 </Project>

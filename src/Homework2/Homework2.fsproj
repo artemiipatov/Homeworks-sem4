@@ -6,7 +6,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="Program.fs"/>
+        <Compile Include="ParseTree.fs" />
+        <Compile Include="Program.fs" />
     </ItemGroup>
 
 </Project>

@@ -10,9 +10,12 @@ module PrimeNumbers =
     /// <param name="n">Input number.</param>
     let isPrime n =
 
-        let sqrt = float >> sqrt >> int
+        let sqrtN = n |> float |> sqrt |> int
 
-        [ 2 .. sqrt n ] |> List.forall (fun v -> n % v <> 0)
+        let rec check i =
+            i > sqrtN || (n % i <> 0 && check (i + 1))
+
+        check 2
 
     /// <summary>
     /// Initializes infinite sequence of prime numbers.

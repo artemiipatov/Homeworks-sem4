@@ -18,9 +18,16 @@ let checkSequence source (count: uint) =
 let checkPrime n =
     isPrime n = PrimeNumbers.isPrime n
 
+let compareWithStaticSeq =
+    test "static seq" {
+        let correctSequence = seq { 1; 2; 3; 5; 7; 11; 13; 17; 19; 23; 29; 31; 37; 41 }
+        Expect.equal (PrimeNumbers.initSeqOfPrimeNumber |> Seq.take 14) correctSequence ""
+    }
 let primeNumbersTests =
     [ checkSequence PrimeNumbers.initSeqOfPrimeNumber
       |> testProperty "all numbers in the sequence are prime"
 
-      checkPrime |> testProperty "isPrime works properly" ]
+      checkPrime |> testProperty "isPrime works properly"
+
+      compareWithStaticSeq ]
     |> testList "general tests"

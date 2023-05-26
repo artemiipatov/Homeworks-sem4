@@ -14,11 +14,11 @@ module Lazy =
 
             member this.Get() =
                 if result.IsNone then
-                    result <- Some (this.Func ())
-                
+                    result <- Some(this.Func())
+
                 result.Value
 
-    type LazyThreadSafe<'a>(func) =
+    type LazyBlocking<'a>(func) =
         let mutable result = None
         member this.Func: unit -> 'a = func
 
@@ -28,7 +28,7 @@ module Lazy =
                 if result.IsNone then
                     (fun () ->
                         if result.IsNone then
-                            result <- Some (this.Func ())
+                            result <- Some(this.Func())
                     )
                     |> lock this
 
@@ -42,7 +42,7 @@ module Lazy =
 
             member this.Get() =
                 if result.IsNone then
-                    Interlocked.CompareExchange(ref result, None, Some (this.Func ()))
+                    Interlocked.CompareExchange(ref result, None, Some(this.Func()))
                     |> ignore
 
                 result.Value

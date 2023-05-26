@@ -5,29 +5,66 @@ open Homework7.Lazy
 open Expecto
 open System.Threading
 
-let checkComputeOnlyOnceUnsafe =
+let checkComputeOnlyOnceSequential =
     test "unsafe" {
         let counter = ref 0
-        let func () = counter.Value <- counter.Value + 1
+
+        let func () =
+            counter.Value <- counter.Value + 1
 
         let l: ILazy<_> = Lazy func
-        for _ in 0 .. 10 do
+
+        for _ in 0..10 do
             l.Get()
-        
+
         Expect.equal counter.Value 1 "Counter should increment only once"
     }
 
-let computeParallel (lazyInstance: ILazy<_>) =
-    Parallel.For(0, 100, (fun _ -> lazyInstance.Get () |> ignore))
+let runParallel amount (l: ILazy<'a>) =
+    Seq.init amount (fun _ -> async { return l.Get() })
+    |> Async.Parallel
+    |> Async.StartAsTask
 
-let makeTestComputeOnlyOnceParallel (lazyConstructor: (unit -> unit) -> ILazy<unit>) =
-    let counter = ref 0
-    let func () = Interlocked.Increment counter |> ignore
+let refsAreEqual amount (l: ILazy<_>) =
+    (runParallel amount l).Result
+    |> Array.pairwise
+    |> Array.map obj.ReferenceEquals
+    |> Array.reduce (&&)
 
-    let lazyInstance = lazyConstructor func
-    
-    computeParallel lazyInstance
+let checkComputeOnlyOnceBlocking =
+    test "blocking" {
+        let counter = ref 0
 
-let lazyComputesOnlyOnce =
-    [ makeTestComputeOnlyOnceParallel (fun action -> LazyThreadSafe action)
-      makeTestComputeOnlyOnceParallel (fun action -> LazyLockFree action) ]
+        let func () =
+            Interlocked.Increment counter |> ignore
+            obj ()
+
+        let lazyBlocking = LazyBlocking(func) :> ILazy<_>
+
+        refsAreEqual 200 lazyBlocking
+        |> fun x ->
+            Expect.isTrue
+                (x && (counter.Value = 1))
+                "Refs should be equal and counter should increment only once"
+    }
+
+let checkLockFreeReturnsTheSameResultOnGet =
+    test "lock free" {
+        use manualResetEvent = new ManualResetEvent false
+
+        let func () =
+            manualResetEvent.WaitOne() |> ignore
+            obj ()
+
+        let lazyLockFree = LazyLockFree(func) :> ILazy<_>
+
+        manualResetEvent.Set() |> ignore
+
+        refsAreEqual 200 lazyLockFree |> fun x -> Expect.isTrue x "Refs should be equal"
+    }
+
+let tests =
+    [ checkComputeOnlyOnceSequential
+      checkComputeOnlyOnceBlocking
+      checkLockFreeReturnsTheSameResultOnGet ]
+    |> testList "Lazy computes only once"

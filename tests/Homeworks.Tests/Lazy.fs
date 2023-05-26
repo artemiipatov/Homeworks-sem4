@@ -41,11 +41,9 @@ let checkComputeOnlyOnceBlocking =
 
         let lazyBlocking = LazyBlocking(func) :> ILazy<_>
 
-        refsAreEqual 200 lazyBlocking
-        |> fun x ->
-            Expect.isTrue
-                (x && (counter.Value = 1))
-                "Refs should be equal and counter should increment only once"
+        Expect.isTrue
+            (refsAreEqual 200 lazyBlocking && (counter.Value = 1))
+            "Refs should be equal and counter should increment only once"
     }
 
 let checkLockFreeReturnsTheSameResultOnGet =
@@ -60,7 +58,7 @@ let checkLockFreeReturnsTheSameResultOnGet =
 
         manualResetEvent.Set() |> ignore
 
-        refsAreEqual 200 lazyLockFree |> fun x -> Expect.isTrue x "Refs should be equal"
+        Expect.isTrue (refsAreEqual 200 lazyLockFree) "Refs should be equal"
     }
 
 let tests =

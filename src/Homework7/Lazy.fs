@@ -7,50 +7,42 @@ module Lazy =
         abstract member Get: unit -> 'a
 
     type Lazy<'a>(func) =
+        let mutable result = None
         member this.Func: unit -> 'a = func
-
-        member val Result = None with get, set
 
         interface ILazy<'a> with
 
             member this.Get() =
-                match this.Result with
-                | Some res -> res
-                | None ->
-                    let result = func ()
-                    this.Result <- Some result
-                    result
+                if result.IsNone then
+                    result <- Some (this.Func ())
+                
+                result.Value
 
     type LazyThreadSafe<'a>(func) =
+        let mutable result = None
         member this.Func: unit -> 'a = func
-
-        member val Result = None with get, set
 
         interface ILazy<'a> with
 
             member this.Get() =
-                (fun () ->
-                    match this.Result with
-                    | Some res -> res
-                    | None ->
-                        let result = func ()
-                        this.Result <- Some result
-                        result
-                )
-                |> lock this
+                if result.IsNone then
+                    (fun () ->
+                        if result.IsNone then
+                            result <- Some (this.Func ())
+                    )
+                    |> lock this
+
+                result.Value
 
     type LazyLockFree<'a>(func) =
         let mutable result = None
         member this.Func: unit -> 'a = func
 
-        // member val Result = None with get, set
-
         interface ILazy<'a> with
 
             member this.Get() =
-                match Volatile.Read(ref result) with
-                | Some res -> res
-                | None ->
-                    let res = func ()
-                    Volatile.Write(ref result, Some res)
-                    res
+                if result.IsNone then
+                    Interlocked.CompareExchange(ref result, None, Some (this.Func ()))
+                    |> ignore
+
+                result.Value

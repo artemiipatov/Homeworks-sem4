@@ -7,9 +7,11 @@
         <RootNamespace>Homeworks.Tests</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
+        <Compile Include="Phonebook.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
     <ItemGroup>
+        <ProjectReference Include="..\..\src\Homework4\Homework4.fsproj" />
         <ProjectReference Include="..\..\src\Homework1\Homework1.fsproj" />
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />

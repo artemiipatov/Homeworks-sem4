@@ -1,38 +1,37 @@
 ﻿namespace Homework7
 
-open System.Net
-open System.IO
+open System
+open System.Net.Http
 open System.Text.RegularExpressions
+open System.Threading.Tasks
 
-module MiniCrawler =
-    let readAsync (url: string) =
-        async {
-            let request = WebRequest.Create(url)
-            use! response = request.AsyncGetResponse()
+type MiniCrawler() =
+    let client = new HttpClient()
 
-            use stream = response.GetResponseStream()
+    interface IDisposable with
+        member this.Dispose() = client.Dispose()
 
-            use reader = new StreamReader(stream)
-            let html = reader.ReadToEnd()
-
+    member this.readAsync(url: string) =
+        task {
+            let! html = client.GetStringAsync(url)
             return html
         }
 
-    let printInfoAsync (url: string) =
-        async {
-            let! html = readAsync url
-
-            do printfn $"%s{url} — %d{html.Length}"
+    member this.getInfoAsync(url: string) =
+        task {
+            let! html = this.readAsync url
+            return url, html.Length
         }
 
-    let getRefsInfo url =
-        let fetchedUrl = url |> readAsync |> Async.RunSynchronously
+    member this.getRefsInfo url =
+        let hrefRegex = Regex(@"<a href=""?(https://?\S*)""", RegexOptions.Compiled)
 
-        Regex.Matches(
-            fetchedUrl,
-            """<a href\s*=\s*(?:["'](?<1>[^"']*)["']|(?<1>[^>\s]+))"""
+        let fetchedUrl = (this.readAsync url).Result
+
+        fetchedUrl
+        |> hrefRegex.Matches
+        |> Seq.map (fun x ->
+            let url = x.Groups[1].Value
+            this.getInfoAsync url
         )
-        |> Seq.iter (fun x ->
-            printfn "%A" x.Value
-            x.Value |> printInfoAsync |> Async.Start
-        )
+        |> Task.WhenAll

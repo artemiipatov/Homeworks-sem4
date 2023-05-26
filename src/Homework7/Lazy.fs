@@ -42,7 +42,7 @@ module Lazy =
 
             member this.Get() =
                 if result.IsNone then
-                    Interlocked.CompareExchange(ref result, None, Some(this.Func()))
+                    Interlocked.CompareExchange(&result, Some(this.Func()), None)
                     |> ignore
 
                 result.Value

@@ -1,0 +1,207 @@
+\documentclass[xetex,mathserif,serif]{beamer}
+\usepackage{polyglossia}
+\setdefaultlanguage[babelshorthands=true]{russian}
+\usepackage{minted}
+\usepackage{tabu}
+
+\useoutertheme{infolines}
+
+\usepackage{fontspec}
+\setmainfont{FreeSans}
+\newfontfamily{\russianfonttt}{FreeSans}
+
+\definecolor{links}{HTML}{2A1B81}
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}
+
+\setbeamertemplate{blocks}[rounded][shadow=false]
+\setbeamercolor*{block title alerted}{fg=red!50!black,bg=red!20}
+\setbeamercolor*{block body alerted}{fg=black,bg=red!10}
+
+\newcommand{\attribution}[1] {
+    \begin{flushright}\begin{scriptsize}\textcolor{gray}{#1}\end{scriptsize}\end{flushright}
+}
+
+\title{Единицы измерения и Active Patterns в F\#}
+\author{Артемий Патов}
+\date{19.05.2023}
+
+\begin{document}
+
+    \frame{\titlepage}
+
+    \section{Единицы измерения}
+    
+    \begin{frame}[fragile]
+        \frametitle{Единицы измерения}
+        \begin{itemize}
+            \item Позволяет добавить дополнительную информацию о числовых типах
+            \item Нужны при проверке типов во время компиляции
+            \item В рантайме размываются
+        \end{itemize}
+        \begin{minted}{fsharp}
+
+// Mass, kilograms.
+[<Measure>] type kg
+// Distance, meters.
+[<Measure>] type m
+// Time, seconds.
+[<Measure>] type s
+// Force, Newtons.
+[<Measure>] type N = kg m / s^2
+        \end{minted}
+    \end{frame}
+
+    \begin{frame}[fragile]
+        \frametitle{Пример}
+        \begin{minted}{fsharp}
+[<Measure>] type degC // temperature, Celsius/Centigrade
+[<Measure>] type degF // temperature, Fahrenheit
+
+let convertCtoF temp = 9.0<degF> / 5.0<degC> * temp + 32.0<degF>
+
+let convertFtoC temp = 5.0<degC> / 9.0<degF> * (temp - 32.0<degF>)
+
+// Define conversion functions from dimensionless floating point values.
+let degreesFahrenheit temp = temp * 1.0<degF>
+let degreesCelsius temp = temp * 1.0<degC>
+
+let toDimensionless (deg: float<degC>) = deg / 1.0<degC>
+        \end{minted}
+    \end{frame}
+
+
+    \section{Active Patterns}
+
+    \begin{frame}[fragile]
+        \frametitle{Pattern Matching (ограничения)}
+
+        \begin{itemize}
+            \item Не first-class (нельзя относиться к ним, как к данным)
+            \item Можно использовать только 16 предопределенных шаблонов, о которых знает компилятор
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}[fragile]
+        \frametitle{Active Patterns}
+
+        \begin{itemize}
+            \item Способ расширения паттерн матчинга в F\#
+            \item Способ сделать first-class паттерн матчинг
+        \end{itemize}
+
+    \end{frame}
+
+    \begin{frame}[fragile]
+        \frametitle{Single-case Total Patterns}
+
+        \begin{itemize}
+            \item Используется при декомпозиции данных
+        \end{itemize}
+
+        \begin{minted}{fsharp}
+open System.Numerics
+
+let (|Rect|) (x: Complex) =
+    Rect (x.Real, x.Imaginary)
+
+let add one two =
+    match (one, two) with
+    | (Rect (r1, i1), Rect (r2, i2)) ->
+        Complex (r1 + r2, i1 + i2)
+        \end{minted}
+
+    \end{frame}
+
+    \begin{frame}[fragile]
+        \frametitle{Multiple-case Total Patterns}
+
+        \begin{minted}{fsharp}
+let (|Even|Odd|) input = if input % 2 = 0 then Even else Odd
+
+let TestNumber input =
+   match input with
+   | Even -> printfn "%d is even" input
+   | Odd -> printfn "%d is odd" input
+        \end{minted}
+
+    \end{frame}
+
+    \begin{frame}[fragile]
+        \frametitle{Partial Active Patterns}
+        \begin{minted}{fsharp}
+let (|Integer|_|) (str: string) =
+   match System.Int32.TryParse(str) with
+   | (true, num) -> Some num
+   | _ -> None
+
+let (|Bool|_|) (str: string) =
+   match System.Boolean.TryParse(str) with
+   | (true, num) -> Some num
+   | _ -> None
+
+let parseNumeric str =
+   match str with
+   | Integer i -> printfn "%d : Integer" i
+   | Bool b -> printfn "%f : Bool" b
+   | _ -> printfn "%s : Not matched." str
+        \end{minted}
+
+    \end{frame}
+
+    \begin{frame}[fragile]
+        \frametitle{Parameterized Active Patterns}
+
+        \begin{itemize}
+            \item Добавляет дополнительные агрументы
+        \end{itemize}
+
+        \begin{minted}{fsharp}
+let (|Default|) onNone value =
+    match value with
+    | None -> onNone
+    | Some e -> e
+
+let greet (Default "random citizen" name) =
+    printfn "Hello, %s!" name
+        \end{minted}
+
+    \end{frame}
+
+    \begin{frame}[fragile]
+        \frametitle{First-class Patterns}
+
+        \begin{minted}{fsharp}
+let unfold (|Q|_|) input =
+  let rec loop values = function
+    | Q(v, next) -> loop (v::values) next
+    | otherwise -> (List.rev values, otherwise)
+  loop [] input
+
+type Expr =
+  | App of Expr * Expr
+  | Lam of head : string * body : Expr
+  | Var of name : string
+
+let (|Lambda|_|) = function
+  | Lam(head, body) -> Some(head, body)
+  | _ -> None
+
+let (|Lambdas|) expr = unfold (|Lambda|_|) expr
+        \end{minted}
+
+    \end{frame}
+
+    \begin{frame}[fragile]
+        \frametitle{Active Patterns}
+
+        \begin{itemize}
+            \item Внутри --- просто функции с метаданными
+            \begin{itemize}
+                \item Всё, что можно делать с функцией, можно делать с Active Patterns
+            \end{itemize}
+        \end{itemize}
+        \begin{minted}{fsharp}
+        \end{minted}
+    \end{frame}
+
+\end{document}

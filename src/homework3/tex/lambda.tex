@@ -1,0 +1,25 @@
+\documentclass{article}
+\usepackage{amsmath}
+\begin{document}
+
+\section{Normal Form}
+\large{$$((\lambda a.(\lambda b.b\ b)\ (\lambda b.b\ b))\ b)\ ((\lambda c.(c\ b))\ (\lambda a.a))\rightarrow_\beta$$}
+\large{$$((\lambda b.b\ b)\ (\lambda b.b\ b))\ ((\lambda c.(c\ b))\ (\lambda a.a))\rightarrow_\beta$$}
+\large{$$((\lambda b.b\ b)\ (\lambda b.b\ b))\ ((\lambda c.(c\ b))\ (\lambda a.a))\rightarrow_\beta$$}
+\large{$$((\lambda b.b\ b)\ (\lambda b.b\ b))\ ((\lambda a.a)\ b)\rightarrow_\beta$$}
+\large{$$((\lambda b.b\ b)\ (\lambda b.b\ b))\ b\rightarrow_\beta$$}
+\large{$$((\lambda b.b\ b)\ (\lambda b.b\ b))\ b\rightarrow_\beta$$}
+$$\hdots$$
+
+\section{S S K}
+$$\textbf{I} \equiv \lambda x.x$$
+$$K \equiv \lambda x\ y.x$$
+$$S \equiv \lambda x\ y\ z. x\ z\ (y\ z)$$
+
+\large{$$(\lambda x\ y\ z. x\ z\ (y\ z))\ (\lambda a\ b.a)\ (\lambda a\ b.a)\rightarrow_\beta$$}
+\large{$$(\lambda y\ z. (\lambda a\ b.a)\ z\ (y\ z))\ (\lambda a\ b.a)\rightarrow_\beta$$}
+\large{$$\lambda z. (\lambda a\ b.a)\ z\ ((\lambda a\ b.a)\ z)\rightarrow_\beta$$}
+\large{$$\lambda z. (\lambda b.z)\ ((\lambda a\ b.a)\ z)\rightarrow_\beta$$}
+\large{$$\lambda z. z$$}
+
+\end{document}
